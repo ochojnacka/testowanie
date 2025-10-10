@@ -1,0 +1,108 @@
+# =========================
+# .NET / C# Test Project
+# =========================
+
+# Kompilacja
+bin/
+obj/
+[Bb]uild/
+[Bb]in/
+[Oo]bj/
+
+# Test results
+TestResults/
+*.trx
+*.coverage
+*.coveragexml
+*.log
+
+# Visual Studio
+.vs/
+.vscode/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.userprefs
+
+# Rider / JetBrains
+.idea/
+*.sln.iml
+
+# Backup / tymczasowe
+*.bak
+*.tmp
+*.temp
+*.old
+
+# Pakiety NuGet
+*.nupkg
+*.snupkg
+*.nuspec
+*.nuget.props
+*.nuget.targets
+packages/
+
+# Logs
+*.log
+logs/
+Logs/
+
+# Publikacja
+publish/
+dist/
+out/
+
+# Systemowe / OS
+.DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
+# Test coverage tools
+coverage/
+.coverage
+coverage.json
+lcov.info
+.opencover.xml
+coverage.cobertura.xml
+
+# Resharper
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# SonarQube / analiza statyczna
+.sonar/
+.sonarqube/
+
+# Temporary files
+*.cache
+*.swp
+*.lock
+
+# Secret files / konfiguracje lokalne
+appsettings.Development.json
+.env
+.env.local
+.env.test
+.env.development
+
+# Paket
+.paket/
+paket-files/
+
+# Azure / CI/CD
+.nuget/
+.nuget/packages/
+*.publishsettings
+
+# Rider / VS Code test configs
+.idea/
+.vscode/
+
+# Test SDK outputs (np. Playwright, Selenium)
+playwright-report/
+playwright/.cache/
+selenium-screenshots/
+screenshots/
