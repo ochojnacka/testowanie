@@ -18,36 +18,48 @@ namespace TestNinja.UnitTests
             _math = new Math();
         }
 
-        [Test]
-        public void TestMethod1()
-        {
-            //var math = new Math();
-            var result = _math.Add(1, 2);
-            Assert.That(result, Is.EqualTo(3));
-        }
+
+        //[Test]
+        //public void TestMethod1()
+        //{
+        //    //var math = new Math();
+        //    var result = _math.Add(1, 2);
+        //    Assert.That(result, Is.EqualTo(3));
+        //}
+
+        //[Test]
+        //public void Max_FirstArgumentIsGreater_ReturnFirstArgument()
+        //{
+        //    //var math = new Math();
+        //    var result = _math.Max(2, 1);
+        //    Assert.That(result, Is.EqualTo(2));
+        //}
+
+        //[Test]
+        //public void Max_SecondArgumentIsGreater_ReturnSecondArgument()
+        //{
+        //    //var math = new Math();
+        //    var result = _math.Max(1, 2);
+        //    Assert.That(result, Is.EqualTo(2));
+        //}
+
+        //[Test]
+        //public void Max_ArgumentsAreEqual_ReturnSameArgument()
+        //{ 
+        //    //var math = new Math();
+        //    var result = _math.Max(1, 1);
+        //    Assert.That(result, Is.EqualTo(1));
+        //}
 
         [Test]
-        public void Max_FirstArgumentIsGreater_ReturnFirstArgument()
-        {
-            //var math = new Math();
-            var result = _math.Max(2, 1);
-            Assert.That(result, Is.EqualTo(2));
-        }
+        [TestCase(2, 1, 2)]
+        [TestCase(1, 2, 2)]
+        [TestCase(1, 1, 1)]
 
-        [Test]
-        public void Max_SecondArgumentIsGreater_ReturnSecondArgument()
+        public void Max_WhenCalled_ReturnGreatestArgument(int par1, int par2, int outcome)
         {
-            //var math = new Math();
-            var result = _math.Max(1, 2);
-            Assert.That(result, Is.EqualTo(2));
-        }
-
-        [Test]
-        public void Max_ArgumentsAreEqual_ReturnSameArgument()
-        { 
-            //var math = new Math();
-            var result = _math.Max(1, 1);
-            Assert.That(result, Is.EqualTo(1));
+            var result = _math.Max(par1, par2);
+            Assert.That(result, Is.EqualTo(outcome));
         }
     }
 }
