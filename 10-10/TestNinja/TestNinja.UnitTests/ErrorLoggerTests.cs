@@ -25,6 +25,7 @@ namespace TestNinja.UnitTests
         {
             var logger = new ErrorLogger();
             Assert.That(() => logger.Log(error), Throws.ArgumentNullException);
+            Assert.That(() => logger.Log(error), Throws.Exception.TypeOf<DivideByZeroException>());
         }
     }
 }
