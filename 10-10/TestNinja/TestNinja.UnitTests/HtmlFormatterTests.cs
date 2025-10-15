@@ -3,6 +3,7 @@ using NUnit.Framework;
 using System;
 using TestNinja.Fundamentals;
 using Assert = NUnit.Framework.Assert;
+using IgnoreAttribute = NUnit.Framework.IgnoreAttribute;
 
 namespace TestNinja.UnitTests
 {
@@ -10,6 +11,7 @@ namespace TestNinja.UnitTests
     public class HtmlFormatterTests
     {
         [Test]
+        [Ignore("Test demo")]
         public void Format_WhenCalled_ReturnsFormattedString()
         {
             var formatter = new HtmlFormatter();
