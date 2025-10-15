@@ -15,6 +15,7 @@ namespace TestNinja.UnitTests
             var controller = new CustomerController();
             var result = controller.GetCustomer(0);
             Assert.That(result, Is.TypeOf<NotFound>());
+            // Is.InstanceOf - sprawdza czy obiekt jest danej klasy lub dziedziczy po niej
         }
 
         [Test]
