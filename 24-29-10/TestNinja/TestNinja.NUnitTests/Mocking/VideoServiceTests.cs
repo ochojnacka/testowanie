@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Moq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,11 +11,22 @@ namespace TestNinja.NUnitTests.Mocking
     [TestFixture]
     internal class VideoServiceTests
     {
+        var _fileReader;
+        var _videoService;
+
+        [SetUp]
+        public void Setup() {
+            _fileReader = new Mock<IFileReader>();
+            _videoService = new VideoService(_fileReader.Object);
+        }
+
         [Test]
         public void ReadVideoTitle_EmptyFile_ReturnError()
         {
-            var service = new VideoService(new FakeFileReader());
-            var result = service.ReadVideoTitle();
+            //  Moq
+            _fileReader.Setup (fr => fr.Read("video.txt")).Returns("");
+            
+            var result = _videoService.ReadVideoTitle();
             Assert.That(result, Does.Contain("Error"));
 
         }
