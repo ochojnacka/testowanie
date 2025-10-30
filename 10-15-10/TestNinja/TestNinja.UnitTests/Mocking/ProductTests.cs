@@ -1,12 +1,6 @@
 ﻿using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TestNinja.Mock
-    using Moq;
-
+using TestNinja.Mocking;
+using Moq;
 
 namespace TestNinja.UnitTests.Mocking
 {
@@ -26,6 +20,7 @@ namespace TestNinja.UnitTests.Mocking
         {
             var customer = new Mock<ICustomer>();
             customer.Setup(c => c.IsGold).Returns(true);
+            var product = new Product() { ListPrice = 100 };
             var result = product.GetPrice(customer.Object);
             Assert.That(result, Is.EqualTo(70));
         }

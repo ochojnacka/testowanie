@@ -8,7 +8,6 @@ namespace TestNinja.UnitTests.Mocking
     [TestFixture]
     internal class VideoServiceTests
     {
-        // poprawic
         [Test]
         public void ReadVideoTitle_EmptyFile_ReturnError()
         {
@@ -21,7 +20,6 @@ namespace TestNinja.UnitTests.Mocking
             Assert.That(result, Does.Contain("Error"));
         }
 
-        // ok
         [Test]
         public void GetUnprocessedVideosAsCsv_AllVideosAreProcessed_ReturnEmptystring()
         {
