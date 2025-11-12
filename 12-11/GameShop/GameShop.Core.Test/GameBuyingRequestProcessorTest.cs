@@ -1,46 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using GameShop.Core.Interface;
+using Moq;
 
 namespace GameShop.Core
 {
     public class GameBuyingRequestProcessorTests
     {
         private GameBuyingRequestProcessor _processor;
+        private GameBuyingRequest _request;
+        private Mock<IGameBuyingRepository> _repositoryMock;
         public GameBuyingRequestProcessorTests()
         {
-            _processor = new GameBuyingRequestProcessor();
-        }
+            _repositoryMock = new Mock<IGameBuyingRepository>();
+            _processor = new GameBuyingRequestProcessor(_repositoryMock.Object);
 
-        [Fact]
-        public void ShouldReturnBuyingGameResultWhitRequestValues()
-        {
             // Arrange
-            var request = new GameBuyingRequest()
+            _request = new GameBuyingRequest()
             {
                 FirstName = "Cezary",
                 LastName = "Walenciuk",
                 Email = "walenciukc@gmail.com",
                 Date = DateTime.Now
             };
+        }
 
+        [Fact]
+        public void ShouldReturnBuyingGameResultWhitRequestValues()
+        {
             //Act
             var processor = new GameBuyingRequestProcessor();
-            GameBuyingResult result = BuyGame(request, processor);
+            GameBuyingResult result = _processor.BuyGame(_request);
 
             //Assert
             Assert.NotNull(result);
-            Assert.Equal(request.FirstName, result.FirstName);
-            Assert.Equal(request.LastName, result.LastName);
-            Assert.Equal(request.Email, result.Email);
-            Assert.Equal(request.Date, result.Date);
-        }
-
-        private static GameBuyingResult BuyGame(GameBuyingRequest request, GameBuyingRequestProcessor processor)
-        {
-            return processor.BuyGame(request);
+            Assert.Equal(_request.FirstName, result.FirstName);
+            Assert.Equal(_request.LastName, result.LastName);
+            Assert.Equal(_request.Email, result.Email);
+            Assert.Equal(_request.Date, result.Date);
         }
 
         [Fact]
@@ -49,6 +44,11 @@ namespace GameShop.Core
             var exception = Assert.Throws<ArgumentNullException>(() => BuyGame(null, _processor));
 
             Assert.Equal("request", exception.ParamName);
+        }
+
+        private void BuyGame(object value, GameBuyingRequestProcessor processor)
+        {
+            throw new NotImplementedException();
         }
 
         [Fact]
@@ -66,6 +66,21 @@ namespace GameShop.Core
 
             Assert.Equal(true, result.IsStatusOk);
             Assert.Equal(0, result.Errors.Count);
+        }
+
+        [Fact]
+        public void ShouldSaveBoughtGame()
+        {
+            _processor.BuyGame(_request);
+
+            // Arrange
+            _request = new GameBuyingRequest()
+            {
+                FirstName = "Cezary",
+                LastName = "Walenciuk",
+                Email = "walenciuk@gmail.com",
+                Date = DateTime.Now
+            };
         }
     }
 }

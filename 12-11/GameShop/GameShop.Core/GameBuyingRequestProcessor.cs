@@ -2,8 +2,15 @@
 {
     public class GameBuyingRequestProcessor
     {
+        private object @object;
+
         public GameBuyingRequestProcessor()
         {
+        }
+
+        public GameBuyingRequestProcessor(object @object)
+        {
+            this.@object = @object;
         }
 
         public GameBuyingResult BuyGame(GameBuyingRequest request)
@@ -18,7 +25,7 @@
             result.Email = request.Email;
             result.Date = request.Date;
             result.IsStatusOk = true;
-            result.Errors = new System.Collections.Generic.List<string>();
+            result.Errors = new List<string>();
 
             return result;
 
