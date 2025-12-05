@@ -120,6 +120,7 @@ describe('examples.isPrime', () => {
 });
 
 // 03-Lepsze-testy-i-Boundary-Testing
+// 04-Testy-Parametryzowane-it-each
 describe('examples.isPrime', () => {
     it('traktuje 0 i 1 jako niepierwsze oraz 2 jako pierwszą', () => {
         expect(isPrime(0)).toBe(false);
@@ -158,26 +159,67 @@ import { shippingCost } from '../src/examples';
 
 describe('examples.shippingCost', () => {
     // Testowanie kosztów (Asercje silne)
-    it('nalicza poprawne ceny dla wag wewnętrznych (interior weights)', () => {
-        // Waga 1.5 kg (powinna wpaść w zakres > 1 i <= 5)
-        expect(shippingCost(1.5)).toBe(5.99);
-        // Waga 10 kg (powinna wpaść w zakres > 5 i <= 20)
-        expect(shippingCost(10)).toBe(8.99);
-        // Waga 30 kg (powinna wpaść w zakres > 20)
-        expect(shippingCost(30)).toBe(14.99);
-    });
+    // it('nalicza poprawne ceny dla wag wewnętrznych (interior weights)', () => {
+    //     // Waga 1.5 kg (powinna wpaść w zakres > 1 i <= 5)
+    //     expect(shippingCost(1.5)).toBe(5.99);
+    //     // Waga 10 kg (powinna wpaść w zakres > 5 i <= 20)
+    //     expect(shippingCost(10)).toBe(8.99);
+    //     // Waga 30 kg (powinna wpaść w zakres > 20)
+    //     expect(shippingCost(30)).toBe(14.99);
+    // });
+
+    // 1. Definicja danych testowych
+    const interiorWeightsData = [
+        { weight: 1.5, expectedCost: 5.99 }, // zakres >1 i <=5
+        { weight: 10, expectedCost: 8.99 }, // zakres >5 i <=20
+        { weight: 30, expectedCost: 14.99 }, // zakres >20
+    ];
+
+    // 2. Użycie it.each do iteracji przez dane testowe
+    it.each(interiorWeightsData)(
+        // Dynamiczny opis testu
+        'nalicza poprawną opłatę $expectedCost dla wagi $weight kg',
+
+        // 4. Funkcja testowa z destrukturyzacją danych testowych
+        ({ weight, expectedCost }) => { // 66, 67
+
+            // 5. Pojedyncza asercja wewnątrz funkcji testowej
+            expect(shippingCost(weight)).toBe(expectedCost); // 67
+        }
+    );
 
     // Testowanie granic (Boundary Testing)
-    it('nalicza poprawne ceny dla wag granicznych (boundary weights)', () => {
-        // Waga dokładnie na granicy pierwszego progu
-        expect(shippingCost(1)).toBe(3.99);
-        // Waga dokładnie na granicy drugiego progu
-        expect(shippingCost(5)).toBe(5.99);
-        // Waga dokładnie na granicy trzeciego progu
-        expect(shippingCost(20)).toBe(8.99);
-        // Waga minimalnie powyżej trzeciego progu (Tier 4)
-        expect(shippingCost(21)).toBe(14.99);
-    });
+    // it('nalicza poprawne ceny dla wag granicznych (boundary weights)', () => {
+    //     // Waga dokładnie na granicy pierwszego progu
+    //     expect(shippingCost(1)).toBe(3.99);
+    //     // Waga dokładnie na granicy drugiego progu
+    //     expect(shippingCost(5)).toBe(5.99);
+    //     // Waga dokładnie na granicy trzeciego progu
+    //     expect(shippingCost(20)).toBe(8.99);
+    //     // Waga minimalnie powyżej trzeciego progu (Tier 4)
+    //     expect(shippingCost(21)).toBe(14.99);
+    // });
+
+    // 1. Definicja danych testowych (granice)
+    const boundaryWeightsData = [
+        { weight: 1, expectedCost: 3.99 },   // Górna granica Tier 1
+        { weight: 5, expectedCost: 5.99 },   // Górna granica Tier 2
+        { weight: 20, expectedCost: 8.99 },  // Górna granica Tier 3
+        { weight: 21, expectedCost: 14.99 }, // Minimalnie powyżej Tier 3
+    ];
+
+    // 2. Użycie it.each
+    it.each(boundaryWeightsData)(
+        // 3. Dynamiczny opis testu
+        'poprawnie nalicza $expectedCost na granicy $weight kg',
+
+        // 4. Funkcja testowa z destrukturyzacją
+        ({ weight, expectedCost }) => { // 69
+
+            // 5. Pojedyncza asercja
+            expect(shippingCost(weight)).toBe(expectedCost); // 69
+        }
+    );
 
     // Testowanie logiki biznasowej i błędów
     // Testowanie kuponów
@@ -198,20 +240,39 @@ describe('examples.shippingCost', () => {
     });
 
     // Testowanie błędów: Wagi nieprawidłowe
-    it('rzuca błąd dla nieprawidłowych wag (<= 0)', () => {
-        // Waga 0 (Invalid)
-        const zeroWeightCall = () => {
-            shippingCost(0);
-        };
-        // Regex: Oczekujemy słowa 'weight' i 'zero' (case insensitive)
-        expect(zeroWeightCall).toThrow(/weight.*zero/i);
+    // it('rzuca błąd dla nieprawidłowych wag (<= 0)', () => {
+    //     // Waga 0 (Invalid)
+    //     const zeroWeightCall = () => {
+    //         shippingCost(0);
+    //     };
+    //     // Regex: Oczekujemy słowa 'weight' i 'zero' (case insensitive)
+    //     expect(zeroWeightCall).toThrow(/weight.*zero/i);
 
-        // Waga ujemna (Invalid)
-        const negativeWeightCall = () => {
-            shippingCost(-5);
-        };
-        expect(negativeWeightCall).toThrow(/weight.*zero/i);
-    });
+    //     // Waga ujemna (Invalid)
+    //     const negativeWeightCall = () => {
+    //         shippingCost(-5);
+    //     };
+    //     expect(negativeWeightCall).toThrow(/weight.*zero/i);
+    // });
+
+    const invalidWeightData = [
+        { weight: 0, errorKeyword: 'zero' },
+        { weight: -5, errorKeyword: 'zero' },
+        { weight: '2', errorKeyword: 'number' },
+    ];
+
+    it.each(invalidWeightData)(
+        'rzuca błąd dla nieprawidłowej wagi $weight kg',
+        ({ weight, errorKeyword }) => {
+            // Opakowanie wywołania funkcji, ponieważ rzuca błąd
+            const badCall = () => {
+                shippingCost(weight);
+            };
+
+            // Sprawdzamy, czy błąd zawiera odpowiednie słowo kluczowe
+            expect(badCall).toThrow(new RegExp(errorKeyword, 'i'));
+        }
+    );
 
     // Testowanie błędów: Nieprawidłowe typy wejściowe
     it('rzuca błąd, gdy waga jest nieprawidłowym typem', () => {
