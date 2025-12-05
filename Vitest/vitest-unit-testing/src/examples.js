@@ -43,3 +43,38 @@ export function isPrime(num) {
 
   return true; // Liczba jest pierwsza
 }
+
+
+// 03-Lepsze-testy-i-Boundary-Testing
+export function shippingCost(weight, coupon = '') { // Domyślna wartość kuponu
+  // 1. Walidacja typów (mniej istotne przy TypeScript, ale ważne w JS)
+  if (typeof weight !== 'number' || typeof coupon !== 'string') {
+    throw new Error('Weight must be a number and coupon must be a string'); 
+  }
+
+  // 2. Walidacja wagi
+  if (weight <= 0) {
+    throw new Error('The weight must be greater than zero');
+  }
+
+  // 3. Sprawdzenie kuponu
+  if (coupon === 'FREE_SHIPPING') { // Wymagany format uppercase
+    return 0; 
+  }
+
+  // 4. Logika kosztów wysyłki (zależna od progów wagowych)
+  if (weight <= 1) {
+    return 3.99;
+  }
+
+  if (weight <= 5) {
+    return 5.99;
+  }
+
+  if (weight <= 20) {
+    return 8.99;
+  }
+  
+  // Dla wszystkich pozostałych wag (> 20)
+  return 14.99;
+}

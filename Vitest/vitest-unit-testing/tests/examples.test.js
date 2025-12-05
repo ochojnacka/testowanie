@@ -8,7 +8,7 @@ describe('examples.longestString', () => {
 
     it('zwraca najdłuższy ciąg znaków', () => {
         // 1. Wywołanie funkcji
-        const longest = longestString('Pikachu', 'Snorlax'); 
+        const longest = longestString('Pikachu', 'Ditto'); 
 
         // 2. Asercja: Oczekujemy, że dłuższym ciągiem jest 'Pikachu'
         expect(longest).toBe('Pikachu'); 
@@ -116,5 +116,125 @@ describe('examples.isPrime', () => {
 
         // WAŻNE: Funkcję możemy wywołać bezpośrednio, ponieważ zwraca wartość, a nie rzuca błędu.
         expect(isPrime(7)).toBeTypeOf('boolean') // alt: expect(typeof isPrime(7)).toBe('boolean');
+    });
+});
+
+// 03-Lepsze-testy-i-Boundary-Testing
+describe('examples.isPrime', () => {
+    it('traktuje 0 i 1 jako niepierwsze oraz 2 jako pierwszą', () => {
+        expect(isPrime(0)).toBe(false);
+        expect(isPrime(1)).toBe(false);
+        expect(isPrime(2)).toBe(true);
+    });
+
+    it('zwraca false lda liczb parzystych większych niż 2', () => {
+        expect(isPrime(4)).toBe(false);
+        expect(isPrime(100)).toBe(false);
+        expect(isPrime(1000)).toBe(false);
+    });
+
+    it('zwraca false dla kwadratów liczb całkowitych', () => {
+        expect(isPrime(9)).toBe(false);
+        expect(isPrime(16)).toBe(false);
+        expect(isPrime(25)).toBe(false);
+    });
+
+    it('zwraca false dla liczb niecałkowitych', () => {
+        expect(isPrime(2.5)).toBe(false);
+        expect(isPrime(3.14)).toBe(false);
+        expect(isPrime(7.1)).toBe(false);
+    });
+
+    it('rzuca błąd dla danych niebędących liczbami', () => {
+        const badCall = () => {
+            isPrime('Charmander');
+        };
+
+        expect(badCall).toThrow();
+    });
+});
+
+import { shippingCost } from '../src/examples';
+
+describe('examples.shippingCost', () => {
+    // Testowanie kosztów (Asercje silne)
+    it('nalicza poprawne ceny dla wag wewnętrznych (interior weights)', () => {
+        // Waga 1.5 kg (powinna wpaść w zakres > 1 i <= 5)
+        expect(shippingCost(1.5)).toBe(5.99);
+        // Waga 10 kg (powinna wpaść w zakres > 5 i <= 20)
+        expect(shippingCost(10)).toBe(8.99);
+        // Waga 30 kg (powinna wpaść w zakres > 20)
+        expect(shippingCost(30)).toBe(14.99);
+    });
+
+    // Testowanie granic (Boundary Testing)
+    it('nalicza poprawne ceny dla wag granicznych (boundary weights)', () => {
+        // Waga dokładnie na granicy pierwszego progu
+        expect(shippingCost(1)).toBe(3.99);
+        // Waga dokładnie na granicy drugiego progu
+        expect(shippingCost(5)).toBe(5.99);
+        // Waga dokładnie na granicy trzeciego progu
+        expect(shippingCost(20)).toBe(8.99);
+        // Waga minimalnie powyżej trzeciego progu (Tier 4)
+        expect(shippingCost(21)).toBe(14.99);
+    });
+
+    // Testowanie logiki biznasowej i błędów
+    // Testowanie kuponów
+    it('poprawnie stosuje kupon FREE_SHIPPING', () => {
+        // Sprawdzamy z wagą 2 (normalnie - 5.99), oczekulemy 0 z kuponem
+        expect(shippingCost(2, 'FREE_SHIPPING')).toBe(0);
+    });
+
+    it('ignoruje kupony, które nie pasują do wzorca', () => {
+        // Małe litery nie pasują (oczekujemy normalnej ceny dla wagi 1)
+        expect(shippingCost(1, 'free_shipping')).toBe(3.99);
+
+        // Nieznany kupon (oczekujemy normalnej ceny dla wagi 1)
+        expect(shippingCost(1, 'SAVE10')).toBe(3.99);
+
+        // Brak kuponu (waga 1), co jest wartością domyślną
+        expect(shippingCost(1)).toBe(3.99);
+    });
+
+    // Testowanie błędów: Wagi nieprawidłowe
+    it('rzuca błąd dla nieprawidłowych wag (<= 0)', () => {
+        // Waga 0 (Invalid)
+        const zeroWeightCall = () => {
+            shippingCost(0);
+        };
+        // Regex: Oczekujemy słowa 'weight' i 'zero' (case insensitive)
+        expect(zeroWeightCall).toThrow(/weight.*zero/i);
+
+        // Waga ujemna (Invalid)
+        const negativeWeightCall = () => {
+            shippingCost(-5);
+        };
+        expect(negativeWeightCall).toThrow(/weight.*zero/i);
+    });
+
+    // Testowanie błędów: Nieprawidłowe typy wejściowe
+    it('rzuca błąd, gdy waga jest nieprawidłowym typem', () => {
+        // String zamiast Number dla wagi
+        const stringWeightCall = () => {
+            shippingCost('2', 'FREE_SHIPPING');
+        };
+        // Funkcja rzuca błąd 'Weight must be a number...'
+        expect(stringWeightCall).toThrow(/number/i);
+    });
+
+    it('rzuca bład, gdy kupon nie jest ciągiem znaków', () => {
+        // Kupon jako Number zamiast String
+        const numberCouponCall = () => {
+            shippingCost(1, 12345);
+        };
+        // Oczekujemy błędu ze słowem 'coupon'
+        expect(numberCouponCall).toThrow(/coupon/i);
+
+        // Kupon jako Null zamiast String
+        const nullCouponCall = () => {
+            shippingCost(1, null);
+        };
+        expect(nullCouponCall).toThrow(/coupon/i);
     });
 });
